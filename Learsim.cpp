@@ -1,7 +1,8 @@
 #include "Arduino.h"
 #include "Learsim.h"
 #include <Adafruit_NeoPixel.h>
-
+#include <ArduinoJson.h>
+DynamicJsonDocument document(1024);
 NeoPixelStrip::NeoPixelStrip(int pin, int count, char identfier[])
 {
   pixelStrip = Adafruit_NeoPixel(count, pin, NEO_GRB + NEO_KHZ800);
@@ -19,6 +20,24 @@ void Button::Init(int pin, char identfier[]){
   _pin = pin;
 }
 
+void MessangeHandler::Init(int bufferSize){
+  
+   document = DynamicJsonDocument(bufferSize);
+   
+}
+
+bool MessangeHandler::DeserializeJson(){
+    DeserializationError err = deserializeJson(document, Serial);
+    if (err == DeserializationError::Ok) return true;
+    return false;
+    
+    
+}
+String MessangeHandler::GetValue(String key){
+    return document[key].as<String>();
+}
+MessangeHandler::MessangeHandler(){}
+
 bool Button::GetValue(){
   return digitalRead(_pin);
 }
@@ -27,8 +46,10 @@ Led::Led(){}
 void Led::Init(int pin, char identfier[]){
   pinMode(pin, OUTPUT);
   _pin = pin;
+  ID = identfier;
 }
 
 void Led::SetValue(bool value){
   digitalWrite(_pin,value);
 }
+

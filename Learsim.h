@@ -1,7 +1,9 @@
 #ifndef Learsim_h
 #define Learsim_h
 #include <Adafruit_NeoPixel.h>
+#include <ArduinoJson.h>
 #include "Arduino.h"
+
 class Button
 {
   public:
@@ -29,8 +31,18 @@ class Led
     Led();
     void Init(int pin, char identfier[]);
     void SetValue(bool value);
+    char* ID;
   private:
     int _pin;
-    char _identifier[];
+    char* _identifier;
+};
+class MessangeHandler
+{
+  public:
+    MessangeHandler();
+    void Init(int bufferSize);
+    String GetValue(String key);
+    bool DeserializeJson();
+  private:
 };
 #endif
