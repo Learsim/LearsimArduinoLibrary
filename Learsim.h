@@ -1,6 +1,6 @@
 #ifndef Learsim_h
 #define Learsim_h
-#include <Adafruit_NeoPixel.h>
+#include <FastLED.h>
 #include <ArduinoJson.h>
 #include "Arduino.h"
 
@@ -14,15 +14,17 @@ class Button
     int _pin;
     char _identifier[];
 };
-class NeoPixelStrip
+class LedStrip
 {
   public:
-    Adafruit_NeoPixel pixelStrip;
-    NeoPixelStrip(int pin,int count, char identfier[]);
+    CRGB* pixelStrip;
+    LedStrip(int pin,int count);
+    void Init();
     void SetPixel(int num, int r, int g, int b);
+    void ShowPixels();
   private:
-    int _pin;
-    int _count;
+     int _pin;
+     int _count;
     char _identifier[];
 };
 class Led
@@ -41,8 +43,13 @@ class MessangeHandler
   public:
     MessangeHandler();
     void Init(int bufferSize);
-    String GetValue(String key);
+    char* GetValue(char* key);
+    int GetIntValue(char* key);
+    bool GetBoolValue(char* key);
+    char* GetArrayItem(int index,char* key);
     bool DeserializeJson();
+    int GetArraySize();
+    void SendID();
   private:
 };
 #endif
